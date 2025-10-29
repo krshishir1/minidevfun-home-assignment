@@ -49,7 +49,7 @@ export default function PaymentMenu() {
         </Button>
         <Button
           size="sm"
-          onClick={() => setPublishOpen(true)}
+        //   onClick={() => setPublishOpen(true)}
           disabled={pStatus.disabled}
           className={
             `${pStatus.className} hover:cursor-pointer`
