@@ -1,20 +1,21 @@
 "use client"
 
-import PromptBar from "./PromptBar"
+import PromptBar, { PromptBarHandle } from "./PromptBar"
 import IdeaChips from "./IdeaChips"
+import { useRef } from "react"
 
 const IDEA_PILLS = ["Launchpad", "Betting Game", "Quiz"]
 
 export default function Hero() {
+  const promptBarRef = useRef<PromptBarHandle | null>(null)
   const handleSubmit = (idea: string) => {
     // Trigger login flow and redirect to app
-    window.location.href = `https://app.minidev.fun?idea=${encodeURIComponent(idea)}`
+    // window.location.href = `https://app.minidev.fun?idea=${encodeURIComponent(idea)}`
   }
 
   const handlePillClick = (pill: string) => {
-    // This will be handled by the PromptBar component
     const idea = `Create a ${pill.toLowerCase()} for music artist tokens`
-    handleSubmit(idea)
+    promptBarRef.current?.setIdeaAndFocus(idea)
   }
 
   return (
@@ -41,7 +42,7 @@ export default function Hero() {
           <div className="relative mb-8">
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 rounded-2xl blur-sm" />
             <div className="relative">
-              <PromptBar onSubmit={handleSubmit} />
+              <PromptBar ref={promptBarRef} onSubmit={handleSubmit} />
             </div>
           </div>
 

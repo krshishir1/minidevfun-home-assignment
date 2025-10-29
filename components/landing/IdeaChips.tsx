@@ -20,7 +20,7 @@ export default function IdeaChips({
         <button
           key={idea}
           onClick={() => onIdeaClick(idea)}
-          className="px-4 py-2 rounded-full bg-muted hover:bg-accent text-sm font-medium text-foreground transition-colors"
+          className="px-4 py-2 rounded-full bg-muted border border-transparent hover:border-neutral-400 text-sm font-medium text-foreground transition-colors"
         >
           {idea}
         </button>
