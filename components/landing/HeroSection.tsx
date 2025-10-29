@@ -20,16 +20,14 @@ export default function Hero() {
   return (
     <section className="relative overflow-hidden">
       {/* Background with gradient and patterns */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-primary/10" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,var(--primary)_0%,transparent_50%)] opacity-10" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,var(--secondary)_0%,transparent_50%)] opacity-10" />
+      
       
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
       <div className="absolute bottom-20 right-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl" />
       <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
       
-      <div className="container relative mx-auto px-4 py-20 md:py-32">
+      <div className="container relative mx-auto md:h-[95vh] px-4 py-20 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance mb-6">
             Build viral miniapps on Farcaster
