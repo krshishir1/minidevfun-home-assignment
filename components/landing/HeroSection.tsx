@@ -23,14 +23,14 @@ export default function Hero() {
       
       
       {/* Decorative elements */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl" />
-      <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
+      <div className="absolute top-20 left-10 w-32 h-32 bg-orange-500/50 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-500/50 rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-primary rounded-full blur-2xl" />
       
       <div className="container relative mx-auto md:h-[95vh] px-4 py-20 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance mb-6">
-            Build viral miniapps on Farcaster
+            Build viral <span className="text-black">miniapps</span> on <span className="text-secondary">Farcaster</span>
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground text-balance mb-12">
