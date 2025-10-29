@@ -38,7 +38,7 @@ export default function DashboardPage() {
         <ResizableHandle className="bg-transparent" withHandle>
             
         </ResizableHandle>
-        <ResizablePanel>
+        <ResizablePanel defaultSize={75}>
           <PreviewPanel projectId={projectId} />
         </ResizablePanel>
       </ResizablePanelGroup>

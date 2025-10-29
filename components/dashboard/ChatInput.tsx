@@ -87,7 +87,7 @@ export default function ChatInput({
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
             size="icon"
-            className="self-end"
+            className="self-end bg-secondary"
           >
             <ArrowUp className="h-4 w-4" />
           </Button>
