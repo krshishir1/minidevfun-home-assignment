@@ -18,21 +18,44 @@ export default function Hero() {
   }
 
   return (
-    <section className="container mx-auto px-4 py-20 md:py-32">
-      <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance mb-6">
-          Build viral miniapps on Farcaster
-        </h1>
-        <p className="text-lg md:text-xl text-muted-foreground text-balance mb-12">
-          Create miniapps with a single prompt—no coding required.
-        </p>
+    <section className="relative overflow-hidden">
+      {/* Background with gradient and patterns */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-primary/10" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,var(--primary)_0%,transparent_50%)] opacity-10" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,var(--secondary)_0%,transparent_50%)] opacity-10" />
+      
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 right-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
+      
+      <div className="container relative mx-auto px-4 py-20 md:py-32">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance mb-6">
+            Build viral miniapps on Farcaster
+          </h1>
+          
+          <p className="text-lg md:text-xl text-muted-foreground text-balance mb-12">
+            Create miniapps with a single prompt—no coding required.
+          </p>
 
-        <PromptBar onSubmit={handleSubmit} />
+          {/* Enhanced PromptBar with highlighted background */}
+          <div className="relative mb-8">
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 rounded-2xl blur-sm" />
+            <div className="relative">
+              <PromptBar onSubmit={handleSubmit} />
+            </div>
+          </div>
 
-        <IdeaChips 
-          ideas={IDEA_PILLS} 
-          onIdeaClick={handlePillClick} 
-        />
+          {/* Enhanced IdeaChips with better styling */}
+          <div className="relative">
+            <IdeaChips 
+              ideas={IDEA_PILLS} 
+              onIdeaClick={handlePillClick} 
+              className="gap-3"
+            />
+          </div>
+        </div>
       </div>
     </section>
   )
