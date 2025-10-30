@@ -27,21 +27,23 @@ const fileTree = {
         "import { Button } from './components/Button';\n\nexport default function App() {\n  return <Button />;\n}",
     },
   ],
-};
+} as const;
 
 export default function Preview() {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<any>(null);
 
   return (
-    <div className="flex border border-gray-200 rounded-lg overflow-hidden w-full h-full shadow-sm bg-white">
-      {/* Sidebar */}
-      <div className="w-64 bg-gray-50 border-r border-gray-200 overflow-y-auto p-3 text-sm">
-        <FileExplorer node={fileTree} onSelect={setSelectedFile} />
-      </div>
+    <div className="relative border border-gray-200 rounded-lg w-full h-full shadow-sm bg-white overflow-auto md:overflow-hidden">
+      <div className="flex min-w-[800px] h-full">
+        {/* Sidebar */}
+        <div className="w-64 min-w-64 bg-gray-50 border-r border-gray-200 overflow-y-auto p-3 text-sm">
+          <FileExplorer node={fileTree as any} onSelect={(f: any) => setSelectedFile(f)} />
+        </div>
 
-      {/* Code View */}
-      <div className="flex-1 p-3">
-        <CodeViewer file={selectedFile} />
+        {/* Code View */}
+        <div className="flex-1 p-3 overflow-auto">
+          <CodeViewer file={selectedFile} />
+        </div>
       </div>
     </div>
   );

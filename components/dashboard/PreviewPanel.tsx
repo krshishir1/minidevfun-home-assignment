@@ -14,7 +14,7 @@ export default function PreviewPanel({ projectId }: PreviewPanelProps) {
   const project = useAppStore((s) => s.projects.find((p) => p.id === projectId));
 
   return (
-    <div className="hidden h-full lg:flex flex-col flex-1 bg-muted border-l border-border overflow-hidden">
+    <div className="flex flex-col flex-1 h-full bg-muted border-l border-border overflow-hidden">
       <PreviewToolbar project={project} onToggleCode={() => setShowCode(!showCode)} />
 
       {/* iPhone Frame - takes remaining space */}

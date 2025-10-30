@@ -6,6 +6,7 @@ import ChatPanel from "@/components/dashboard/ChatPanel";
 import PreviewPanel from "@/components/dashboard/PreviewPanel";
 import ProjectHeader from "@/components/dashboard/ProjectHeader";
 import useAppStore from "@/hooks/use-app-store";
+import MobileSwitch from "@/components/dashboard/MobileSwitch";
 
 import {
   ResizableHandle,
@@ -20,6 +21,7 @@ export default function DashboardPage() {
   const pathname = usePathname();
   const [projectId, setProjectId] = useState("");
   const [initialMessage, setInitialMessage] = useState<string | null>(null);
+  const [mobileView, setMobileView] = useState<"chat" | "preview">("chat");
   const projects = useAppStore((s) => s.projects);
   const setActiveProject = useAppStore((s) => s.setActiveProject);
 
@@ -47,22 +49,35 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      {/* <ProjectHeader projectId={projectId} /> */}
+      {/* Mobile switcher */}
+      <MobileSwitch projectId={projectId} view={mobileView} onChange={setMobileView} />
 
-      <ResizablePanelGroup
-        direction="horizontal"
-        className="flex-1 flex overflow-hidden gap-0"
-      >
-        <ResizablePanel minSize={25} defaultSize={25} maxSize={40}>
+      {/* Desktop layout */}
+      <div className="hidden md:block h-full">
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="flex-1 flex overflow-hidden gap-0 h-full"
+        >
+          <ResizablePanel minSize={25} defaultSize={25} maxSize={40}>
+            <ChatPanel initialMessage={initialMessage} projectId={projectId} />
+          </ResizablePanel>
+          <ResizableHandle className="bg-transparent" withHandle>
+              
+          </ResizableHandle>
+          <ResizablePanel defaultSize={75}>
+            <PreviewPanel projectId={projectId} />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
+
+      {/* Mobile layout */}
+      <div className="md:hidden flex-1 overflow-hidden">
+        {mobileView === "chat" ? (
           <ChatPanel initialMessage={initialMessage} projectId={projectId} />
-        </ResizablePanel>
-        <ResizableHandle className="bg-transparent" withHandle>
-            
-        </ResizableHandle>
-        <ResizablePanel defaultSize={75}>
+        ) : (
           <PreviewPanel projectId={projectId} />
-        </ResizablePanel>
-      </ResizablePanelGroup>
+        )}
+      </div>
       {/* <div >
       </div> */}
     </div>

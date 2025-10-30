@@ -78,8 +78,8 @@ export default function PreviewToolbar({ onToggleCode, project }: PreviewToolbar
 
   return (
     <div className="py-2 px-2">
-      <div className="bg-white border rounded-md shadow-xs px-3 py-2 flex items-center justify-between gap-2">
-        <div className="text-base font-medium text-foreground">{project?.title}</div>
+      <div className="bg-white border rounded-md shadow-xs px-3 py-2 flex flex-col gap-3 md:flex-row items-center justify-between gap-2">
+        <div className="hidden md:block text-base font-medium text-foreground">{project?.title}</div>
         <div>
           <PreviewUrlToolbar />
         </div>

@@ -52,14 +52,19 @@ export default function PaymentMenu({project} : PaymentMenuProps) {
   return (
     <>
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" onClick={() => setTopUpOpen(true)}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setTopUpOpen(true)}
+          className="h-7 px-2 text-[11px] sm:h-8 sm:px-3 sm:text-xs"
+        >
           Top Up
         </Button>
         <Button
           size="sm"
+          className={`${pStatus.className} hover:cursor-pointer h-7 px-2 text-[11px] sm:h-8 sm:px-3 sm:text-xs`}
         //   onClick={() => setPublishOpen(true)}
           disabled={pStatus?.disabled ? pStatus.disabled : false}
-          className={`${pStatus.className} hover:cursor-pointer`}
         >
           {pStatus.label}
         </Button>
