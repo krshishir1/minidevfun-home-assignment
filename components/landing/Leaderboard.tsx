@@ -123,7 +123,7 @@ export default function Leaderboard() {
           </div>
 
           {/* Mobile view */}
-          <div className="md:hidden divide-y divide-border/70">
+          <div className="md:hidden bg-white/90 divide-y divide-border/70">
             {rows.map((item) => (
               <div key={item.rank} className="p-4 hover:bg-muted/30 transition-colors">
                 <div className="flex items-start justify-between mb-2">
