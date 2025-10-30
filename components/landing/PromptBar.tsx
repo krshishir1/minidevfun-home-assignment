@@ -19,7 +19,7 @@ export interface PromptBarHandle {
 }
 
 const PromptBar = forwardRef<PromptBarHandle, PromptBarProps>(function PromptBar(
-  { onSubmit, placeholder = "Create a launchpad for music artist tokens", className = "" },
+  { onSubmit, placeholder = "Describe your miniapp", className = "" },
   ref
 ) {
   const [idea, setIdea] = useState("");
@@ -76,8 +76,10 @@ const PromptBar = forwardRef<PromptBarHandle, PromptBarProps>(function PromptBar
             rows={3}
             error={error}
             ref={inputRef}
+            className="md:pb-16"
           />
-          <div className="absolute w-full px-6 bottom-4 right-0">
+          {/* Overlay actions on md+ */}
+          <div className="hidden md:block absolute w-full px-6 bottom-4 right-0">
             <div className="w-full flex items-center justify-between">
               <div className="flex-1 flex items-center gap-1 text-gray-700">
                 <button className="w-8 h-8 px-2 rounded-md text-muted-foreground hover:bg-muted">
@@ -95,6 +97,33 @@ const PromptBar = forwardRef<PromptBarHandle, PromptBarProps>(function PromptBar
                 <Button
                   type="submit"
                   size="lg"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-md"
+                >
+                  Generate
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+          {/* Stacked actions on small screens */}
+          <div className="md:hidden mt-3 px-1">
+            <div className="w-full flex items-center justify-between">
+              <div className="flex-1 flex items-center gap-1 text-gray-700">
+                <button className="w-8 h-8 px-2 rounded-md text-muted-foreground hover:bg-muted">
+                  <Plus strokeWidth={2.5} className="w-4 cursor-pointer" />
+                </button>
+
+                <button className="w-8 h-8 px-2 rounded-md text-muted-foreground hover:bg-muted">
+                  <SlidersHorizontal
+                    strokeWidth={2.5}
+                    className="w-4 cursor-pointer"
+                  />
+                </button>
+              </div>
+              <div>
+                <Button
+                  type="submit"
+                  size="sm"
                   className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-md"
                 >
                   Generate

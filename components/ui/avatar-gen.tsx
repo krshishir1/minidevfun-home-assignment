@@ -21,7 +21,7 @@ export default function UserAvatar({ name, variant, className }: UserAvatarProps
   );
 }
 
-export function AccountAvatar({ seed }: { seed: string }) {
+export function AccountAvatar({ seed, className }: { seed: string, className: string }) {
   const avatar = createAvatar(thumbs, { seed });
   const svg = avatar.toString();
   const dataUri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
@@ -30,7 +30,7 @@ export function AccountAvatar({ seed }: { seed: string }) {
     <img
       src={dataUri}
       alt="avatar"
-      className="w-10 rounded-full border border-gray-200"
+      className={`w-10 rounded-full border border-gray-200 ${className}`}
     />
   );
 }

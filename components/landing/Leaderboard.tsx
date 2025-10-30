@@ -39,32 +39,32 @@ export default function Leaderboard() {
   const rows = DATA[timeFrame]
 
   return (
-    <section className="container mx-auto px-4 py-20 md:py-48">
+    <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Earn $MINI for the apps you launch</h2>
-          <p className="text-lg text-muted-foreground">Top miniapp creators get weekly $MINI rewards.</p>
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 md:mb-4">Earn $MINI for the apps you launch</h2>
+          <p className="text-base sm:text-lg text-muted-foreground">Top miniapp creators get weekly $MINI rewards.</p>
         </div>
 
-        <div className="flex justify-center gap-2 mb-8">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
           <Button
             variant={timeFrame === "today" ? "default" : "outline"}
             onClick={() => setTimeFrame("today")}
-            className={timeFrame === "today" ? "bg-primary hover:bg-primary/90" : ""}
+            className={`px-3 sm:px-4 ${timeFrame === "today" ? "bg-primary hover:bg-primary/90" : ""}`}
           >
             Today
           </Button>
           <Button
             variant={timeFrame === "week" ? "default" : "outline"}
             onClick={() => setTimeFrame("week")}
-            className={timeFrame === "week" ? "bg-primary hover:bg-primary/90" : ""}
+            className={`px-3 sm:px-4 ${timeFrame === "week" ? "bg-primary hover:bg-primary/90" : ""}`}
           >
             This Week
           </Button>
           <Button
             variant={timeFrame === "all" ? "default" : "outline"}
             onClick={() => setTimeFrame("all")}
-            className={timeFrame === "all" ? "bg-primary hover:bg-primary/90" : ""}
+            className={`px-3 sm:px-4 ${timeFrame === "all" ? "bg-primary hover:bg-primary/90" : ""}`}
           >
             All-time
           </Button>
@@ -132,20 +132,21 @@ export default function Leaderboard() {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <ProjectAvatar seed={item.name} />
-                        <div className="font-semibold">{item.name}</div>
+                        <div className="font-semibold text-sm">{item.name}</div>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <AccountAvatar seed={item.creator} />
-                        <div>{item.creator}</div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <p>Created by</p>
+                        <AccountAvatar seed={item.creator} className={"w-8"} />
+                        <div className="font-bold">{item.creator}</div>
                       </div>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" className="group text-primary -mt-1">
+                  <Button variant="ghost" size="sm" className="group text-primary -mt-1 px-2 py-1 h-8">
                     Try
                     <ExternalLink className="ml-1 h-3 w-3" />
                   </Button>
                 </div>
-                <div className="flex items-center justify-between text-sm mt-3">
+                <div className="flex items-center justify-between text-xs mt-3">
                   <span className="text-muted-foreground">
                     24h: <span className="font-semibold text-foreground">{item.volume}</span>
                   </span>
