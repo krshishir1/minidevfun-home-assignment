@@ -6,18 +6,10 @@ import { useState } from "react";
 import { Plus, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProjectAvatar } from "@/components/ui/avatar-gen";
+import useAppStore from "@/hooks/use-app-store";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-interface Project {
-  id: string;
-  name: string;
-  created: string;
-}
-
-const MOCK_PROJECTS: Project[] = [
-  { id: "1", name: "Music Launchpad", created: "2 days ago" },
-  { id: "2", name: "Betting Game", created: "1 week ago" },
-  { id: "3", name: "Quiz Master", created: "2 weeks ago" },
-];
+// Data is loaded from zustand store
 
 interface AppSidebarProps {
   sidebarOpen: boolean;
@@ -28,19 +20,28 @@ export default function AppSidebar({
   sidebarOpen,
   setSidebarOpen,
 }: AppSidebarProps) {
-  const [activeProject, setActiveProject] = useState("1");
   const [focusedIndex, setFocusedIndex] = useState(0);
+
+  const projects = useAppStore((s) => s.projects);
+  const activeProjectId = useAppStore((s) => s.activeProjectId);
+  const setActiveProjectGlobal = useAppStore((s) => s.setActiveProject);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Ensure local state mirrors store for keyboard focus logic
+  const activeId = activeProjectId ?? projects[0]?.id ?? null;
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setFocusedIndex(Math.min(index + 1, MOCK_PROJECTS.length - 1));
+      setFocusedIndex(Math.min(index + 1, projects.length - 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setFocusedIndex(Math.max(index - 1, 0));
     } else if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      setActiveProject(MOCK_PROJECTS[index].id);
+      if (projects[index]) setActiveProjectGlobal(projects[index].id);
     }
   };
 
@@ -68,7 +69,7 @@ export default function AppSidebar({
           className="h-10 w-10 rounded-lg"
           aria-label={sidebarOpen ? "Expand sidebar" : "Collapse sidebar"}
           title={sidebarOpen ? "Expand" : "Collapse"}
-          onClick={() => setSidebarOpen((v) => !v)}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
         >
           {sidebarOpen ? (
             <ChevronRight className="h-5 w-5" />
@@ -84,18 +85,23 @@ export default function AppSidebar({
         role="listbox"
         aria-label="Projects list"
       >
-        {MOCK_PROJECTS.map((project, index) => {
-          const isActive = activeProject === project.id;
+        {projects.map((project, index) => {
+          const isActive = activeId === project.id;
           const isFocused = focusedIndex === index;
           return (
             <button
               key={project.id}
-              onClick={() => setActiveProject(project.id)}
+              onClick={() => {
+                setActiveProjectGlobal(project.id);
+                const params = new URLSearchParams(searchParams?.toString());
+                params.set("idea", project.id);
+                router.replace(`${pathname}?${params.toString()}`);
+              }}
               onKeyDown={(e) => handleKeyDown(e, index)}
               onFocus={() => setFocusedIndex(index)}
               role="option"
               aria-selected={isActive}
-              title={project.name}
+              title={project.title}
               className={`h-10 ${
                 sidebarOpen ? "w-10" : "w-full"
               } rounded-lg flex items-center gap-3 px-2 transition-colors outline-none ${
@@ -107,11 +113,11 @@ export default function AppSidebar({
               }`}
             >
               <span className="inline-flex items-center justify-center">
-                <ProjectAvatar seed={project.name} />
+                <ProjectAvatar seed={project.title} />
               </span>
               {!sidebarOpen && (
                 <span className="truncate text-sm font-medium">
-                  {project.name}
+                  {project.title}
                 </span>
               )}
             </button>

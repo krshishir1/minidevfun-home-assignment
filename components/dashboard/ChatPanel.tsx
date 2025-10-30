@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
+import useAppStore from "@/hooks/use-app-store";
 
 interface Message {
   id: string;
@@ -21,52 +22,39 @@ export default function ChatPanel({
   initialMessage,
   projectId,
 }: ChatPanelProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const chats = useAppStore((s) => s.chatsByProjectId[projectId] ?? []);
+  const addChatMessage = useAppStore((s) => s.addChatMessage);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const hasRunRef = useRef(false);
 
   useEffect(() => {
-    if (initialMessage) {
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        role: "user",
-        content: initialMessage,
-        timestamp: new Date(),
-      };
-      setMessages([userMessage]);
+    if (hasRunRef.current) return;
+    if (!initialMessage) return;
+    if (chats.length >= 2) return;
 
-      // Simulate assistant response
-      setTimeout(() => {
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content:
-            "Building your miniapp... This will take a moment as we generate the smart contracts, UI, and deploy everything.",
-          timestamp: new Date(),
-          isLoading: true,
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
-        setIsLoading(true);
+    hasRunRef.current = true;
 
-        // Simulate completion
-        setTimeout(() => {
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg.id === assistantMessage.id
-                ? {
-                    ...msg,
-                    content:
-                      "Your miniapp is ready! Check the preview on the right.",
-                    isLoading: false,
-                  }
-                : msg
-            )
-          );
-          setIsLoading(false);
-        }, 3000);
-      }, 500);
+    // If chat is empty, seed the user message; always simulate assistant
+    if (chats.length === 0) {
+      addChatMessage(projectId, { role: "user", content: initialMessage });
     }
-  }, [initialMessage]);
+    setTimeout(() => {
+      addChatMessage(projectId, {
+        role: "assistant",
+        content:
+          "Building your miniapp... This will take a moment as we generate the smart contracts, UI, and deploy everything.",
+      });
+      setIsLoading(true);
+      setTimeout(() => {
+        addChatMessage(projectId, {
+          role: "assistant",
+          content: "Your miniapp is ready! Check the preview on the right.",
+        });
+        setIsLoading(false);
+      }, 3000);
+    }, 500);
+  }, [initialMessage, chats.length, addChatMessage, projectId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -74,41 +62,22 @@ export default function ChatPanel({
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [chats]);
 
   const handleSendMessage = (content: string) => {
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: "user",
-      content,
-      timestamp: new Date(),
-    };
-    setMessages((prev) => [...prev, userMessage]);
-
-    // Simulate assistant response
+    if (!content.trim()) return;
+    addChatMessage(projectId, { role: "user", content });
     setIsLoading(true);
     setTimeout(() => {
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
+      addChatMessage(projectId, {
         role: "assistant",
         content: "I'm processing your request and updating the miniapp...",
-        timestamp: new Date(),
-        isLoading: true,
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-
+      });
       setTimeout(() => {
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === assistantMessage.id
-              ? {
-                  ...msg,
-                  content: "Updates applied! Your miniapp has been refreshed.",
-                  isLoading: false,
-                }
-              : msg
-          )
-        );
+        addChatMessage(projectId, {
+          role: "assistant",
+          content: "Updates applied! Your miniapp has been refreshed.",
+        });
         setIsLoading(false);
       }, 2000);
     }, 500);
@@ -118,7 +87,7 @@ export default function ChatPanel({
     <div className="flex-1 h-full flex flex-col bg-muted overflow-hidden">
       {/* Messages */}
       <div className="flex-1 overflow-auto p-4 space-y-4">
-        {messages.length === 0 ? (
+        {chats.length === 0 ? (
           <div className="flex items-center justify-center h-full text-muted-foreground">
             <div className="text-center">
               <p className="text-sm">Start by describing your miniapp idea</p>
@@ -126,8 +95,16 @@ export default function ChatPanel({
           </div>
         ) : (
           <>
-            {messages.map((message) => (
-              <ChatMessage key={message.id} message={message} />
+            {chats.map((message) => (
+              <ChatMessage
+                key={message.id}
+                message={{
+                  id: message.id,
+                  role: message.role as any,
+                  content: message.content,
+                  timestamp: new Date(message.timestamp),
+                }}
+              />
             ))}
             <div ref={messagesEndRef} />
           </>

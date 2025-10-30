@@ -5,15 +5,21 @@ import { Code2, Camera, RotateCcw, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
+import useAppStore from "@/hooks/use-app-store";
+
 import PreviewUrlToolbar from "./PreviewUrlToolbar";
+import PublishModal from "./modals/PublishModal";
 
 interface PreviewToolbarProps {
+  project: any;
   onToggleCode: () => void;
 }
 
-export default function PreviewToolbar({ onToggleCode }: PreviewToolbarProps) {
+export default function PreviewToolbar({ onToggleCode, project }: PreviewToolbarProps) {
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [publishOpen, setPublishOpen] = useState(false);
   const { toast } = useToast();
+  const setProjectStatus = useAppStore((s) => s.setProjectStatus);
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.ctrlKey || e.metaKey) {
@@ -28,10 +34,33 @@ export default function PreviewToolbar({ onToggleCode }: PreviewToolbarProps) {
   };
 
   const handleScreenshot = () => {
-    toast({
-      title: "Screenshot captured",
-      description: "Screenshot saved to clipboard",
-    });
+    // Create a mock image and trigger download
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1024;
+      canvas.height = 576;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        // background
+        ctx.fillStyle = "#2563eb"; // blue-600
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // title
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 36px system-ui, -apple-system, Segoe UI, Roboto";
+        ctx.fillText("Miniapp Preview", 48, 96);
+        ctx.font = "24px system-ui, -apple-system, Segoe UI, Roboto";
+        const title = project?.title ?? "Untitled";
+        ctx.fillText(title, 48, 140);
+      }
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = `${(project?.title || "preview").replace(/\s+/g, "-")}.png`;
+      link.click();
+      toast({ title: "Screenshot captured", description: "Image downloaded." });
+    } catch (e) {
+      toast({ title: "Screenshot failed", description: "Try again.", variant: "destructive" as any });
+    }
   };
 
   const handleRefresh = () => {
@@ -44,18 +73,15 @@ export default function PreviewToolbar({ onToggleCode }: PreviewToolbarProps) {
   };
 
   const handlePublish = () => {
-    toast({
-      title: "Publishing...",
-      description: "Your miniapp is being published",
-    });
+    setPublishOpen(true);
   };
 
   return (
     <div className="py-2 px-2">
       <div className="bg-white border rounded-md shadow-xs px-3 py-2 flex items-center justify-between gap-2">
-        <div className="text-base font-medium text-foreground">Project Name #1</div>
+        <div className="text-base font-medium text-foreground">{project?.title}</div>
         <div>
-            <PreviewUrlToolbar />
+          <PreviewUrlToolbar />
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -99,12 +125,20 @@ export default function PreviewToolbar({ onToggleCode }: PreviewToolbarProps) {
             aria-label="Publish miniapp"
           >
             <div className="flex items-center gap-2">
-                <p>Publish</p>
-            <Upload className="h-4 w-4" />
+              <p>{project?.status == "published" ? "Update" : "Publish"}</p>
+              <Upload className="h-4 w-4" />
             </div>
           </Button>
         </div>
       </div>
+      <PublishModal
+        open={publishOpen}
+        onOpenChange={setPublishOpen}
+        status={(project?.status as any) || "draft"}
+        onStatusChange={(s) => {
+          if (project?.id) setProjectStatus(project.id, s === "published" ? "published" : "draft");
+        }}
+      />
     </div>
   );
 }

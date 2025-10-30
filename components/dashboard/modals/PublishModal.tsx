@@ -42,14 +42,14 @@ export default function PublishModal({ open, onOpenChange, status, onStatusChang
 
         <div className="space-y-4">
           <div className="bg-muted p-4 rounded-lg space-y-3">
-            <div>
+            {/* <div>
               <div className="text-sm text-muted-foreground mb-1">Current Status</div>
               <div className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary/20 text-primary">
                 {status === "draft" && "Draft"}
                 {status === "preview-ready" && "Preview Ready"}
                 {status === "published" && "Published"}
               </div>
-            </div>
+            </div> */}
 
             <div>
               <div className="text-sm text-muted-foreground mb-2">Deployment Details</div>

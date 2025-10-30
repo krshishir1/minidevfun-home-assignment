@@ -6,11 +6,17 @@ import AccountMenu from "./AccountMenu";
 import PaymentMenu from "./PaymentMenu";
 import Link from "next/link";
 
+import useAppStore from "@/hooks/use-app-store";
+
 interface AppNavbarProps {
   onToggleSidebar: () => void;
 }
 
 export default function AppNavbar({ onToggleSidebar }: AppNavbarProps) {
+
+    const {projects, activeProjectId} = useAppStore()
+    const activeProject = projects.find((el) => el.id === activeProjectId);
+
   return (
     <nav
       className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 h-12 flex items-center justify-between px-4"
@@ -42,7 +48,7 @@ export default function AppNavbar({ onToggleSidebar }: AppNavbarProps) {
       </div>
 
       <div className="flex items-center gap-4">
-        <PaymentMenu />
+        <PaymentMenu project={activeProject} />
       </div>
     </nav>
   );

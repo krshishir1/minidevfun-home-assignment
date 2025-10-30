@@ -3,14 +3,18 @@
 import PromptBar, { PromptBarHandle } from "./PromptBar"
 import IdeaChips from "./IdeaChips"
 import { useRef } from "react"
+import { useRouter } from "next/navigation"
+import useAppStore from "@/hooks/use-app-store"
 
 const IDEA_PILLS = ["Launchpad", "Betting Game", "Quiz"]
 
 export default function Hero() {
   const promptBarRef = useRef<PromptBarHandle | null>(null)
+  const router = useRouter()
+  const addProject = useAppStore((s) => s.addProject)
   const handleSubmit = (idea: string) => {
-    // Trigger login flow and redirect to app
-    // window.location.href = `https://app.minidev.fun?idea=${encodeURIComponent(idea)}`
+    const project = addProject(idea)
+    router.push(`/app?idea=${encodeURIComponent(project.id)}`)
   }
 
   const handlePillClick = (pill: string) => {

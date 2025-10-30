@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import TopUpModal from "./modals/TopupModal";
 import PublishModal from "./modals/PublishModal";
+import useAppStore from "@/hooks/use-app-store";
 
-type PublishStatus = "draft" | "published" | "error";
+type PublishStatus = "draft" | "published" | "error" | "ready";
 
 interface PublishButtonProps {
   publishStatus: PublishStatus;
@@ -13,13 +14,14 @@ interface PublishButtonProps {
 }
 
 interface PaymentMenuProps {
-    status: PublishStatus
+    project: any;
 }
 
-export default function PaymentMenu() {
+export default function PaymentMenu({project} : PaymentMenuProps) {
   const [topUpOpen, setTopUpOpen] = useState(false);
   const [publishOpen, setPublishOpen] = useState(false);
-  const [status, setStatus] = useState<PublishStatus>("draft")
+
+  const status: PublishStatus = (project?.status as PublishStatus) || "draft";
 
   const statusMap: Record<
     PublishStatus,
@@ -31,15 +33,21 @@ export default function PaymentMenu() {
     },
     published: {
       label: "Published",
-      className: "bg-purple-600 hover:bg-purple-700 text-white",
+      className: "bg-secondary hover:bg-purple-700 text-white",
     },
     error: {
       label: "Failed",
       className: "bg-red-500 hover:bg-red-600 text-white",
     },
+    ready: {
+        label: "Ready",
+        className: "bg-muted hover:bg-muted/80 text-muted-foreground",
+    }
   };
 
   const pStatus = statusMap[status];
+  console.log(status, pStatus)
+
 
   return (
     <>
@@ -50,22 +58,22 @@ export default function PaymentMenu() {
         <Button
           size="sm"
         //   onClick={() => setPublishOpen(true)}
-          disabled={pStatus.disabled}
-          className={
-            `${pStatus.className} hover:cursor-pointer`
-          }
+          disabled={pStatus?.disabled ? pStatus.disabled : false}
+          className={`${pStatus.className} hover:cursor-pointer`}
         >
           {pStatus.label}
         </Button>
       </div>
 
       <TopUpModal open={topUpOpen} onOpenChange={setTopUpOpen} />
-      <PublishModal
+      {/* <PublishModal
         open={publishOpen}
         onOpenChange={setPublishOpen}
         status={status}
-        onStatusChange={setStatus}
-      />
+        onStatusChange={(s) => {
+          if (project?.id) setProjectStatus(project.id, s === "published" ? "published" : "draft");
+        }}
+      /> */}
     </>
   );
 }
